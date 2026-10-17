@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Employee management dashboard built with HTML5, CSS3, JavaScript, and localStorage.">
+  <title>PeopleDesk — Employee Management</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#" aria-label="PeopleDesk home"><span class="brand-mark">P</span><span>PeopleDesk</span></a>
+    <div class="workspace-label">WORKSPACE</div>
+    <nav>
+      <a class="nav-link active" href="#dashboard"><span class="nav-icon">▦</span> Dashboard</a>
+      <a class="nav-link" href="#employees"><span class="nav-icon">♙</span> Employees</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="help-card"><div class="help-icon">✦</div><strong>People first.</strong><p>Keep your team organized in one place.</p></div>
+      <div class="profile"><div class="avatar avatar-purple">AD</div><div><strong>Admin Demo</strong><small>Administrator</small></div><span class="more">•••</span></div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+      <div class="breadcrumbs">Workspace <span>/</span> <strong>Dashboard</strong></div>
+      <div class="top-actions"><span class="today" id="todayLabel"></span><div class="top-avatar">AD</div></div>
+    </header>
+
+    <section class="page-wrap" id="dashboard">
+      <div class="welcome-row">
+        <div><p class="eyebrow">PEOPLE OVERVIEW</p><h1>Employee dashboard</h1><p class="subheading">A clear view of your people, all in one place.</p></div>
+        <div class="welcome-actions"><button class="btn btn-light" id="exportBtn">↓ Export CSV</button><button class="btn btn-primary" id="addEmployeeBtn">＋ Add employee</button></div>
+      </div>
+
+      <div class="stats-grid">
+        <article class="stat-card"><div class="stat-top"><span class="stat-label">Total employees</span><span class="stat-icon purple">♙</span></div><div class="stat-value" id="totalEmployees">0</div><div class="stat-foot"><span class="dot purple-dot"></span> All employee records</div></article>
+        <article class="stat-card"><div class="stat-top"><span class="stat-label">Active employees</span><span class="stat-icon green">✓</span></div><div class="stat-value" id="activeEmployees">0</div><div class="stat-foot"><span class="dot green-dot"></span> Currently active</div></article>
+        <article class="stat-card"><div class="stat-top"><span class="stat-label">Departments</span><span class="stat-icon orange">▤</span></div><div class="stat-value" id="departmentCount">0</div><div class="stat-foot">Across your organization</div></article>
+        <article class="stat-card"><div class="stat-top"><span class="stat-label">On leave</span><span class="stat-icon blue">☼</span></div><div class="stat-value" id="onLeaveEmployees">0</div><div class="stat-foot"><span class="dot blue-dot"></span> Employees on leave</div></article>
+      </div>
+
+      <section class="panel department-panel">
+        <div class="panel-heading"><div><h2>Team distribution</h2><p>Employees by department</p></div><span class="panel-chip">OVERVIEW</span></div>
+        <div id="departmentChart" class="department-chart"><p class="empty-note">Add employees to see department distribution.</p></div>
+      </section>
+
+      <section class="panel employee-panel" id="employees">
+        <div class="panel-heading employee-heading"><div><h2>Employee directory</h2><p>Manage your team and employee details.</p></div><button class="btn btn-primary btn-mobile" id="addEmployeeBtn2">＋ Add employee</button></div>
+        <div class="toolbar"><label class="search-box"><span>⌕</span><input type="search" id="searchInput" placeholder="Search name, email or role..." aria-label="Search employees"></label><select id="departmentFilter" aria-label="Filter by department"><option value="">All departments</option></select><select id="statusFilter" aria-label="Filter by status"><option value="">All statuses</option><option>Active</option><option>On Leave</option><option>Inactive</option></select></div>
+        <div class="table-wrap"><table><thead><tr><th>EMPLOYEE</th><th>DEPARTMENT</th><th>ROLE</th><th>STATUS</th><th>JOINED</th><th><span class="sr-only">Actions</span></th></tr></thead><tbody id="employeeTableBody"></tbody></table></div>
+        <div class="table-footer"><span id="resultCount">Showing 0 employees</span><button class="text-button" id="clearFiltersBtn">Clear filters</button></div>
+      </section>
+      <footer>PeopleDesk <span>•</span> Employee data is saved locally in this browser.</footer>
+    </section>
+  </main>
+
+  <div class="modal-backdrop" id="employeeModal" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header"><div><p class="eyebrow">EMPLOYEE RECORD</p><h2 id="modalTitle">Add employee</h2></div><button class="icon-button" id="closeModalBtn" aria-label="Close dialog">×</button></div>
+      <form id="employeeForm">
+        <input type="hidden" id="employeeId">
+        <div class="form-grid">
+          <label>Full name <span>*</span><input id="employeeName" name="name" required maxlength="80" placeholder="e.g. Jordan Lee"></label>
+          <label>Email address <span>*</span><input id="employeeEmail" name="email" type="email" required maxlength="120" placeholder="jordan@company.com"></label>
+          <label>Department <span>*</span><select id="employeeDepartment" name="department" required><option value="">Select department</option><option>Engineering</option><option>Design</option><option>Human Resources</option><option>Marketing</option><option>Sales</option><option>Finance</option><option>Operations</option><option>Customer Support</option></select></label>
+          <label>Job title <span>*</span><input id="employeeRole" name="role" required maxlength="80" placeholder="e.g. Product Designer"></label>
+          <label>Status <span>*</span><select id="employeeStatus" name="status" required><option>Active</option><option>On Leave</option><option>Inactive</option></select></label>
+          <label>Date joined <span>*</span><input id="employeeJoined" name="joined" type="date" required></label>
+        </div>
+        <p class="form-error" id="formError" role="alert"></p>
+        <div class="modal-actions"><button type="button" class="btn btn-light" id="cancelModalBtn">Cancel</button><button type="submit" class="btn btn-primary" id="saveEmployeeBtn">Save employee</button></div>
+      </form>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
